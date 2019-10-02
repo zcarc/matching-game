@@ -8,6 +8,13 @@ var colors = [];
 // 카드가 뒤집히고 있을 때 클릭하는 것을 방지하기 위해서 플래그를 생성한다.
 var clickFlag = true;
 
+// 하나 눌렀을 때 반응없고, 두개를 눌렀을 때 반응이 일어나야함
+var clickCards = [];
+
+var sameCards = [];
+
+
+
 for(var i = 0; candidate_colors.length > 0; i += 1) {
     colors = colors.concat(candidate_colors.splice(Math.floor(Math.random() * candidate_colors.length), 1));
 }
@@ -45,9 +52,37 @@ function setCards(Horizontal, Vertical) {
 
             c.addEventListener('click', function(){
 
-                // 클릭플래그가 true인 경우만 클릭이 가능하게 설정.
-                if(clickFlag){
+                // 클릭플래그가 true인 경우와 해당 카드가 sameCards에 없는 경우 실행
+                if( clickFlag  && !sameCards.includes(c) ){
                     c.classList.toggle('flipped');
+
+                    clickCards.push(c);
+                    if(clickCards.length === 2) {
+                        // console.log(clickCards[0].querySelector('.card-back').style.backgroundColor)
+                        // console.log(clickCards[1].querySelector('.card-back').style.backgroundColor)
+                        
+
+                        if(clickCards[0].querySelector('.card-back').style.backgroundColor === clickCards[1].querySelector('.card-back').style.backgroundColor) {
+
+                            sameCards.push(clickCards[0]);
+                            sameCards.push(clickCards[1]);
+                            clickCards = [];
+                          
+                        } else { // 두 카드의 색상이 다르면  
+
+                            clickFlag = false;
+
+                            setTimeout(function() {
+                                clickCards[0].classList.remove('flipped');
+                                clickCards[1].classList.remove('flipped');
+                                clickFlag = true;
+
+                                // 비워야 다음에 클릭하는 것을 저장한다.
+                                clickCards = [];
+                            }, 1000);
+                        }
+
+                    }
                 }
                 
             });
