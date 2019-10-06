@@ -152,3 +152,39 @@ function setCards(Horizontal, Vertical) {
 
 shuffle();
 setCards(Horizontal, Vertical);
+
+
+// 원시 값은 값을 대입하면 자동적으로 복사가 된다.
+// 하지만 객체나 배열 같은 원시 값이 아닌 것들은 대입할 때 참조가 된다.
+
+// 원시변수
+var name01 = "kacy";
+var name02 = name01;
+
+// 이 경우 name02를 바꿔도 name01에는 아무런 영향이 없다.
+name02 = "hannah";
+
+console.log('name01: ', name01, ", name02: ", name02);
+
+
+// 배열
+var arr = ["apple", "orange", "grape"];
+var copyArr = arr;
+
+// 이 경우는 참조관계이기 때문에 arr 배열에도 영향을 끼친다.
+copyArr[0] = "tangerine";
+
+console.log('arr: ', arr, ", copyArr: ", copyArr);
+
+
+// 객체
+var obj01 = {
+	name: "kacy"
+}
+
+var obj02 = obj01
+
+// 이 경우도 참조관계이기 때문에 obj01 객체에도 영향을 끼친다.
+obj02.name = "hannah"
+
+console.log('obj01: ', obj01, ", obj02: ", obj02);
