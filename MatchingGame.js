@@ -3,6 +3,10 @@ var Horizontal = 4;
 var Vertical = 3;
 
 var candidate_colors = ['red', 'red', 'orange', 'orange', 'green', 'green',  'yellow', 'yellow', 'white', 'white', 'pink', 'pink'];
+
+// 배열과 참조 관계를 끊기 위해서 slice()를 사용한다.
+// slice()를 사용하지 않으면 candadate_colors가 변하면 temp_colors로 변하게 된다.
+var temp_colors = candidate_colors.slice();
 var colors = [];
 
 // 카드가 뒤집히고 있을 때 클릭하는 것을 방지하기 위해서 플래그를 생성한다.
@@ -13,13 +17,18 @@ var clickCards = [];
 
 var sameCards = [];
 
+var startTime;
 
 
-for(var i = 0; candidate_colors.length > 0; i += 1) {
-    colors = colors.concat(candidate_colors.splice(Math.floor(Math.random() * candidate_colors.length), 1));
+function shuffle() {
+
+    for(var i = 0; candidate_colors.length > 0; i += 1) {
+        colors = colors.concat(candidate_colors.splice(Math.floor(Math.random() * candidate_colors.length), 1));
+    }
+    
+
 }
 
-console.log(colors);
 
 
 function setCards(Horizontal, Vertical) {
@@ -67,6 +76,21 @@ function setCards(Horizontal, Vertical) {
                             sameCards.push(clickCards[0]);
                             sameCards.push(clickCards[1]);
                             clickCards = [];
+
+                            if(sameCards.length === 12) {
+                                var endTime = new Date();
+                                alert("성공" + (endTime - startTime) / 1000 + '초 걸렸습니다.');
+
+                                // 내부 태그들을 전부 지운다.
+                                document.querySelector('#wrapper').innerHTML = '';
+
+                                temp_colors = candidate_colors.slice();
+                                colors = [];
+                                sameCards = [];
+                                startTime;
+                                shuffle();
+                                setCards(Horizontal, Vertical);
+                            }
                           
                         } else { // 두 카드의 색상이 다르면  
 
@@ -88,9 +112,10 @@ function setCards(Horizontal, Vertical) {
             });
 
         } (card));
-        
 
-        document.body.appendChild(card);
+        document.querySelector('#wrapper').appendChild(card);
+
+
     }
 
     // 이렇게 하면 한번에 뒤집힘
@@ -118,9 +143,12 @@ function setCards(Horizontal, Vertical) {
         // 카드 세팅이 끝난 상태이므로 클릭플래그를 true로 만든다.
         clickFlag = true;
 
+        startTime = new Date();
+
     }, 5000);
 
 
 }
 
+shuffle();
 setCards(Horizontal, Vertical);
