@@ -188,3 +188,81 @@ var obj02 = obj01
 obj02.name = "hannah"
 
 console.log('obj01: ', obj01, ", obj02: ", obj02);
+
+
+// 객체 복사
+
+var obj = {a:1, b:2};
+var obj2 = {};
+
+// 원시적인 방법: 객체의 변수를 각각 대입
+obj2.a = obj.a;
+obj2.b = obj.b;
+
+
+// Object.keys()를 사용하는 방법
+var obj = { a: 111, b: 222, c: 333 };
+
+// 이 메소드에 객체를 넣으면 객체가 배열로 반환된다.
+// 그래서 [0]:"a", [1]:"b", [2]:"c"
+// Object.keys(obj);
+
+// 여기서 obj2는 객체인데
+// 배열에서 접근하는 것 처럼 obj2[] 이런식으로 접근해도 객체의 첫번째 값으로 인식한다.
+// obj2가 빈 객체인 상태에서 obj2.a = 123; 이런식으로 대입하면 객체 변수 a가 자동으로 생성되고
+// a에 123 이라는 integer 값이 들어간다.
+// 그래서 아래와 같은 코드는 key만 넣어도 그 key를 자동으로 생성하고 그 key의 값을 obj에서 불러온다.
+// 왼쪽 obj2[key] 는 변수를 받는다는 의미이고 오른쪽 obj[key]는 해당 객체에서 값을 호출한다는 의미이다.
+var obj2 = {};
+Object.keys(obj).forEach(function(key) {
+    obj2[key] = obj[key];
+})
+
+
+// 객체 간에 참조 관계를 확인하는 방법
+// 이렇게 객체 간에 같은 지 확인하고 true가 나온다면 서로 참조관계이다.
+console.log(obj === obj2);
+
+
+// 같은 값을 지닌 객체들은 서로 같을까?
+var obj1 = {a:1, b:2};
+var obj2 = {a:1, b:2};
+
+// 객체의 값이 같더라도 서로 참조관계는 아니다.
+console.log( obj1 === obj2 );
+
+// 이렇게 참조를 한다면 그 순간부터 참조관계가 된다.
+obj2 = obj1;
+console.log( obj1 === obj2 );
+
+
+// 위에서 설명한 아래의 코드는 완벽하게 참조가 아닌 복사를 할 수 있는 코드가 아니다.
+var obj2 = {};
+Object.keys(obj).forEach(function(key) {
+    obj2[key] = obj[key];
+})
+
+
+
+var obj = { a:111, b: { c: 555 } };
+var obj2 = {};
+
+Object.keys(obj).forEach(function(key){
+    obj2[key] = obj[key];
+});
+
+// 위 코드로서 obj2에 obj 객체의 값들이 복사되었을 것이다.
+// obj2.a = 333; 을 변경하면 obj.a의 값은 111을 계속 유지한다.
+// 여기서 obj.b는 객체를 담고있다
+// obj2.b는 {c :555} 라는 객체를 담고있다.
+// 앞에서 객체간에 대입은 복사가 아니라 참조가 된다.
+// 그래서 obj2[b] = obj[b] 는 원시 값이 아니라 객체 값이기 때문에
+// 참조관계가 되어 obj2.b.c = 777; 로 변경했을 때
+// obj.b.c의 값도 777로 변경된다.
+
+
+
+// 얕은 복사, 깊은 복사가 있는데 그게 바로 "참조", "복사"라고 생각하면 된다.
+
+// 얕은 복사: 참조
+// 깊은 복사: 복사
