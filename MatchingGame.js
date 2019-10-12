@@ -6,7 +6,12 @@ var candidate_colors = ['red', 'red', 'orange', 'orange', 'green', 'green',  'ye
 
 // 배열과 참조 관계를 끊기 위해서 slice()를 사용한다.
 // slice()를 사용하지 않으면 candadate_colors가 변하면 temp_colors로 변하게 된다.
+
 var temp_colors = candidate_colors.slice();
+
+// 아래와 같이 사용해도 깊은 복사가 된다.
+// var temp_colors = JSON.parse(JSON.stringify(candidate_colors));
+
 var colors = [];
 
 // 카드가 뒤집히고 있을 때 클릭하는 것을 방지하기 위해서 플래그를 생성한다.
@@ -85,6 +90,10 @@ function setCards(Horizontal, Vertical) {
                                 document.querySelector('#wrapper').innerHTML = '';
 
                                 temp_colors = candidate_colors.slice();
+
+                                // 아래와 같이 사용해도 깊은 복사가 된다.
+                                // temp_colors = JSON.parse(JSON.stringify(candidate_colors));
+
                                 colors = [];
                                 sameCards = [];
                                 startTime;
@@ -266,3 +275,36 @@ Object.keys(obj).forEach(function(key){
 
 // 얕은 복사: 참조
 // 깊은 복사: 복사
+// JSON은 언어에 독립적이라 어떤 언어에서도 사용 가능하다.
+// JSON.parse() : string 객체를 json 객체로 변환
+// JSON.stringify() : json 객체를 string 객체로 변환
+
+// slice() 메소드를 사용하면 겉에는 깊은 복사처럼 보이지만 속은 얕은 복사이다.
+
+
+// 정리
+var obj1 = {a:111, b:222, c:333};
+var obj2 = {};
+
+Object.keys(obj1).forEach(function(key) {
+
+    obj2[key] = obj1[key];
+
+}); // 1단계만 복사, 나머지는 참조
+
+
+var arr1 = [1,2,3];
+var arr2 = arr1.slice(); // 1단계만 복사, 나머지는 참조
+
+var obj3 = JSON.parse(JSON.stringify(obj1));
+var arr3 = JSON.parse(JSON.stringify(arr1));
+
+// slice() 메소드나 Object.key() 메소드는 값이 1단계만 있을 때 사용한다.
+// 1단계는 var obj1 = {a:111, b:222, c:333}; 이런식으로 key의 value가 객체가 아닌 원시 값일 때를 의미한다.
+// 2단계: var arr1 = [ 555, 666, [777] ]
+// 3단계: var obj1 = {a:111, b:222, c: { b: {c: 333} }};
+
+// 2단계나 3단계일 때는 아래를 사용한다.
+// 아래는 최대한 안쓰는게 좋다. 이유는 성능이 매우 안좋다.
+// var obj3 = JSON.parse(JSON.stringify(obj1));
+// var arr3 = JSON.parse(JSON.stringify(arr1));
