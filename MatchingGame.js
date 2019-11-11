@@ -306,5 +306,143 @@ var arr3 = JSON.parse(JSON.stringify(arr1));
 
 // 2단계나 3단계일 때는 아래를 사용한다.
 // 아래는 최대한 안쓰는게 좋다. 이유는 성능이 매우 안좋다.
+// 그리고 완벽한 깊은 복사도 아니다.
 // var obj3 = JSON.parse(JSON.stringify(obj1));
 // var arr3 = JSON.parse(JSON.stringify(arr1));
+
+
+
+
+// 아래 카드 들은 중복이 발생한다.
+var card1 = {
+    name: '제로초',
+    att: 5,
+    hp: 10,
+    type: '카드',
+    attack: function() {
+        console.log('공격!');
+    },
+    defend: function() {
+        console.log('방어!');
+    }
+}
+
+var card2 = {
+    name: '무지',
+    att: 1,
+    hp: 3,
+    type: '카드',
+    attack: function() {
+        console.log('공격!');
+    },
+    defend: function() {
+        console.log('방어!');
+    }
+}
+
+var card3 = {
+    name: '토끼',
+    att: 3,
+    hp: 2,
+    type: '카드',
+    attack: function() {
+        console.log('공격!');
+    },
+    defend: function() {
+        console.log('방어!');
+    }
+}
+
+
+// 디자인 패턴
+// 아래와 같은 패턴을 "Factory Pattern"이라고 한다.
+function cardFactory(name, att, hp) {
+    return {
+        name: name,
+        att: att,
+        hp: hp,
+        type: 'card',
+        attack: function() {},
+        defend: function() {},
+    };
+}
+
+var card = cardFactory('zeroCho', 10, 10)
+
+
+
+// 프로토 타입을 사용해서 중복 제거
+
+// 공통되는 부분
+var prototype = {
+    type: 'card',
+    attack: function() {},
+    defend: function() {},
+}
+
+
+// 달라지는 부분
+var card = {
+    name: 'zeroCho',
+    att: 10,
+    hp: 10,
+}
+
+
+// 프로토 객체 안에 prototype 변수를 대입
+card._proto_ = prototype;
+
+
+// 프로토 객체 접근
+card._proto_.type;
+
+
+// 프로토 객체에 접근할 때 프로토 객체 이름 생략 가능
+// JS가 객체의 속성을 찾을 때 해당 객체에 type이 있는지 확인하고
+// 없다면 알아서 _proto_ 객체를 열어서 찾아본다.
+// 전부 찾아도 안나오면 undefined를 반환한다.
+card.type;
+
+
+// cardFactory() 수정 1
+function cardFactory(name, att, hp) {
+    var card = {
+        name: name,
+        att: att,
+        hp: hp,
+    }
+    card._proto_ = {
+        type: 'card',
+        attack: function() {},
+        defend: function() {},
+    }
+    return card;
+}
+
+
+// cardFactory() 수정 2
+var protoType = {
+    type: 'card',
+    attack: function() {},
+    defend: function() {},
+};
+
+
+// 달라지는 부분은 따로 매개변수로 받는다.
+function cardFactory(name, att, hp) {
+
+    var card = {
+        name: name,
+        att: att,
+        hp: hp,
+    }
+
+    // 같은 부분은 protoType 으로 뺀다.
+    card._proto_ = protoType;
+    return card;
+}
+
+
+// 실무에서 팩토리 패턴은 많이 사용된다.
+// 팩토리를 모르면 거의 코딩이 불가능하다.
+// 공장처럼 카드를 찍어내는 것을 팩토리 패턴이라고 한다.
